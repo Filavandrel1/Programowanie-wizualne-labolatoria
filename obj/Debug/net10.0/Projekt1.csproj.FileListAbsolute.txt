@@ -72,3 +72,4 @@
 /Users/filavandrel/uczelnia/C#/Projekt1/obj/Debug/net10.0/Projekt1.pdb
 /Users/filavandrel/uczelnia/C#/Projekt1/obj/Debug/net10.0/Projekt1.genruntimeconfig.cache
 /Users/filavandrel/uczelnia/C#/Projekt1/obj/Debug/net10.0/ref/Projekt1.dll
+/Users/filavandrel/uczelnia/C#/Projekt1/obj/Debug/net10.0/Projekt1.sourcelink.json
