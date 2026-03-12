@@ -1422,11 +1422,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/filavandrel/uczelnia/C#/Projekt2/Projekt2.csproj",
+      "projectUniqueName": "/Users/filavandrel/uczelnia/C#/Programowanie-wizualne-labolatoria/Projekt2/Projekt2.csproj",
       "projectName": "Projekt2",
-      "projectPath": "/Users/filavandrel/uczelnia/C#/Projekt2/Projekt2.csproj",
+      "projectPath": "/Users/filavandrel/uczelnia/C#/Programowanie-wizualne-labolatoria/Projekt2/Projekt2.csproj",
       "packagesPath": "/Users/filavandrel/.nuget/packages/",
-      "outputPath": "/Users/filavandrel/uczelnia/C#/Projekt2/obj/",
+      "outputPath": "/Users/filavandrel/uczelnia/C#/Programowanie-wizualne-labolatoria/Projekt2/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/filavandrel/.nuget/NuGet/NuGet.Config"

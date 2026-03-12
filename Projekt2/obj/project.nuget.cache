@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "btAlNYjg0NQ=",
+  "dgSpecHash": "n46WI/CT9+0=",
   "success": true,
-  "projectFilePath": "/Users/filavandrel/uczelnia/C#/Projekt2/Projekt2.csproj",
+  "projectFilePath": "/Users/filavandrel/uczelnia/C#/Programowanie-wizualne-labolatoria/Projekt2/Projekt2.csproj",
   "expectedPackageFiles": [
     "/Users/filavandrel/.nuget/packages/avalonia/11.3.12/avalonia.11.3.12.nupkg.sha512",
     "/Users/filavandrel/.nuget/packages/avalonia.angle.windows.natives/2.1.25547.20250602/avalonia.angle.windows.natives.2.1.25547.20250602.nupkg.sha512",
