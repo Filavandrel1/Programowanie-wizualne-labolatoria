@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -69,12 +71,121 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     /// <summary>
-    /// Obraca obraz o wybrany kąt - przycisk "Rotate".
+    /// Obraca obraz o wybrany kąt (90, 180, 270) - przycisk "Rotate".
+    /// Operuje na pikselach: odczytuje źródłowy obraz i tworzy nowy z obróconym układem.
     /// </summary>
     [RelayCommand]
     private void Obrot()
     {
-        // Funkcja zostanie zaimplementowana w następnych zapytaniach
+        if (Obraz == null) return;
+
+        var src = Obraz;
+        int srcW = src.PixelSize.Width;
+        int srcH = src.PixelSize.Height;
+
+        // Określ wymiary docelowe w zależności od kąta
+        int dstW, dstH;
+        if (WybranyKat == 180)
+        {
+            dstW = srcW;
+            dstH = srcH;
+        }
+        else // 90 lub 270 - zamiana szerokości i wysokości
+        {
+            dstW = srcH;
+            dstH = srcW;
+        }
+
+        // Odczytaj piksele źródłowe do tablicy bajtów (BGRA, 4 bajty na piksel)
+        int srcStride = srcW * 4;
+        int srcBufferSize = srcStride * srcH;
+        byte[] srcPixels = new byte[srcBufferSize];
+
+        var handle = GCHandle.Alloc(srcPixels, GCHandleType.Pinned);
+        try
+        {
+            src.CopyPixels(new PixelRect(0, 0, srcW, srcH), handle.AddrOfPinnedObject(), srcBufferSize, srcStride);
+        }
+        finally
+        {
+            handle.Free();
+        }
+
+        // Przygotuj docelową tablicę pikseli
+        int dstStride = dstW * 4;
+        byte[] dstPixels = new byte[dstStride * dstH];
+
+        // Obrót pikseli
+        for (int y = 0; y < srcH; y++)
+        {
+            for (int x = 0; x < srcW; x++)
+            {
+                int newX, newY;
+                switch (WybranyKat)
+                {
+                    case 90:
+                        // Obrót o 90° w prawo: (x,y) -> (srcH-1-y, x)
+                        newX = srcH - 1 - y;
+                        newY = x;
+                        break;
+                    case 180:
+                        // Obrót o 180°: (x,y) -> (srcW-1-x, srcH-1-y)
+                        newX = srcW - 1 - x;
+                        newY = srcH - 1 - y;
+                        break;
+                    case 270:
+                        // Obrót o 270° w prawo (90° w lewo): (x,y) -> (y, srcW-1-x)
+                        newX = y;
+                        newY = srcW - 1 - x;
+                        break;
+                    default:
+                        newX = x;
+                        newY = y;
+                        break;
+                }
+
+                // Kopiuj 4 bajty piksela (BGRA)
+                int srcOffset = y * srcStride + x * 4;
+                int dstOffset = newY * dstStride + newX * 4;
+
+                dstPixels[dstOffset + 0] = srcPixels[srcOffset + 0]; // B
+                dstPixels[dstOffset + 1] = srcPixels[srcOffset + 1]; // G
+                dstPixels[dstOffset + 2] = srcPixels[srcOffset + 2]; // R
+                dstPixels[dstOffset + 3] = srcPixels[srcOffset + 3]; // A
+            }
+        }
+
+        // Utwórz nową bitmapę z obróconych pikseli
+        var dst = new WriteableBitmap(
+            new PixelSize(dstW, dstH),
+            src.Dpi,
+            Avalonia.Platform.PixelFormat.Bgra8888,
+            Avalonia.Platform.AlphaFormat.Premul);
+
+        using (var dstLock = dst.Lock())
+        {
+            unsafe
+            {
+                byte* dstPtr = (byte*)dstLock.Address;
+                int realDstStride = dstLock.RowBytes;
+
+                for (int row = 0; row < dstH; row++)
+                {
+                    for (int col = 0; col < dstW; col++)
+                    {
+                        int arrOffset = row * dstStride + col * 4;
+                        int lockOffset = row * realDstStride + col * 4;
+
+                        dstPtr[lockOffset + 0] = dstPixels[arrOffset + 0];
+                        dstPtr[lockOffset + 1] = dstPixels[arrOffset + 1];
+                        dstPtr[lockOffset + 2] = dstPixels[arrOffset + 2];
+                        dstPtr[lockOffset + 3] = dstPixels[arrOffset + 3];
+                    }
+                }
+            }
+        }
+
+        Obraz = dst;
     }
 
     /// <summary>
