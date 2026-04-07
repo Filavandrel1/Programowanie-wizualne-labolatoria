@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -96,11 +97,82 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     /// <summary>
-    /// Pozostawia tylko kanał zielony - przycisk "Only Green".
+    /// Pozostawia tylko piksele zielone - resztę zamienia na czarne.
+    /// Piksel uznajemy za "zielony" gdy kanał G jest dominujący
+    /// (G > R i G > B).
+    /// Format pikseli BGRA: [0]=B, [1]=G, [2]=R, [3]=A.
     /// </summary>
     [RelayCommand]
     private void TylkoZielony()
     {
-        // Funkcja zostanie zaimplementowana w następnych zapytaniach
+        if (Obraz == null) return;
+
+        var src = Obraz;
+        int w = src.PixelSize.Width;
+        int h = src.PixelSize.Height;
+        int stride = w * 4;
+        int bufferSize = stride * h;
+        byte[] pixels = new byte[bufferSize];
+
+        // Odczytaj piksele źródłowe
+        var handle = GCHandle.Alloc(pixels, GCHandleType.Pinned);
+        try
+        {
+            src.CopyPixels(new PixelRect(0, 0, w, h), handle.AddrOfPinnedObject(), bufferSize, stride);
+        }
+        finally
+        {
+            handle.Free();
+        }
+
+        // Przetwórz piksele - zostaw zielone, resztę zamień na czarne
+        for (int i = 0; i < bufferSize; i += 4)
+        {
+            byte b = pixels[i + 0]; // Blue
+            byte g = pixels[i + 1]; // Green
+            byte r = pixels[i + 2]; // Red
+            // pixels[i + 3] to Alpha - nie zmieniamy
+
+            // Jeśli piksel NIE jest zielony (G nie dominuje), zamień na czarny
+            if (!(g > r && g > b))
+            {
+                pixels[i + 0] = 0; // B = 0
+                pixels[i + 1] = 0; // G = 0
+                pixels[i + 2] = 0; // R = 0
+                // Alpha pozostaje bez zmian
+            }
+        }
+
+        // Utwórz nową bitmapę z przetworzonymi pikselami
+        var dst = new WriteableBitmap(
+            new PixelSize(w, h),
+            src.Dpi,
+            Avalonia.Platform.PixelFormat.Bgra8888,
+            Avalonia.Platform.AlphaFormat.Premul);
+
+        using (var dstLock = dst.Lock())
+        {
+            unsafe
+            {
+                byte* dstPtr = (byte*)dstLock.Address;
+                int dstStride = dstLock.RowBytes;
+
+                for (int y = 0; y < h; y++)
+                {
+                    for (int x = 0; x < w; x++)
+                    {
+                        int arrOffset = y * stride + x * 4;
+                        int lockOffset = y * dstStride + x * 4;
+
+                        dstPtr[lockOffset + 0] = pixels[arrOffset + 0];
+                        dstPtr[lockOffset + 1] = pixels[arrOffset + 1];
+                        dstPtr[lockOffset + 2] = pixels[arrOffset + 2];
+                        dstPtr[lockOffset + 3] = pixels[arrOffset + 3];
+                    }
+                }
+            }
+        }
+
+        Obraz = dst;
     }
 }
