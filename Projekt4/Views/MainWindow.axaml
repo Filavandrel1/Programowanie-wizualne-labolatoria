@@ -1,0 +1,85 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Projekt4.ViewModels"
+        xmlns:conv="using:Projekt4.Converters"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="550"
+        x:Class="Projekt4.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="Projekt 4 - Obraz"
+        Width="900" Height="550">
+
+    <Window.Resources>
+        <conv:IntEqualConverter x:Key="IntEqualConverter"/>
+    </Window.Resources>
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid Margin="10" ColumnDefinitions="200,*">
+
+        <!-- Lewy panel: RadioButtony + przyciski -->
+        <StackPanel Grid.Column="0" Spacing="8" Margin="0,0,10,0">
+
+            <!-- RadioButtony wyboru kąta obrotu -->
+            <RadioButton Content="90°" 
+                         GroupName="Kat"
+                         IsChecked="{Binding WybranyKat, Converter={StaticResource IntEqualConverter}, ConverterParameter=90}"
+                         FontSize="16"/>
+            <RadioButton Content="180°" 
+                         GroupName="Kat"
+                         IsChecked="{Binding WybranyKat, Converter={StaticResource IntEqualConverter}, ConverterParameter=180}"
+                         FontSize="16"/>
+            <RadioButton Content="270°" 
+                         GroupName="Kat"
+                         IsChecked="{Binding WybranyKat, Converter={StaticResource IntEqualConverter}, ConverterParameter=270}"
+                         FontSize="16"/>
+
+            <!-- Przycisk Rotate - czerwony -->
+            <Button Content="Rotate"
+                    Command="{Binding ObrotCommand}"
+                    HorizontalAlignment="Stretch"
+                    Padding="10,8" FontSize="14"
+                    Background="#FFCDD2" Foreground="Black"/>
+
+            <!-- Przycisk Invert Colors - jasny niebieski -->
+            <Button Content="Invert Colors"
+                    Command="{Binding OdwrocKoloryCommand}"
+                    HorizontalAlignment="Stretch"
+                    Padding="10,8" FontSize="14"
+                    Background="#BBDEFB" Foreground="Black"/>
+
+            <!-- Przycisk Upside Down - niebieski -->
+            <Button Content="Upside Down"
+                    Command="{Binding DoGoryNogamiCommand}"
+                    HorizontalAlignment="Stretch"
+                    Padding="10,8" FontSize="14"
+                    Background="#90CAF9" Foreground="Black"/>
+
+            <!-- Przycisk Only Green - zielony -->
+            <Button Content="Only Green"
+                    Command="{Binding TylkoZielonyCommand}"
+                    HorizontalAlignment="Stretch"
+                    Padding="10,8" FontSize="14"
+                    Background="#C8E6C9" Foreground="Black"/>
+
+            <!-- Przycisk Load - biały -->
+            <Button Content="Load"
+                    Command="{Binding ZaladujCommand}"
+                    HorizontalAlignment="Stretch"
+                    Padding="10,8" FontSize="14"
+                    Background="White" Foreground="Black"
+                    BorderBrush="Gray" BorderThickness="1"/>
+        </StackPanel>
+
+        <!-- Prawy panel: podgląd obrazu -->
+        <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="1" Padding="5">
+            <Image Source="{Binding Obraz}"
+                   Stretch="Uniform"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
+        </Border>
+    </Grid>
+</Window>
