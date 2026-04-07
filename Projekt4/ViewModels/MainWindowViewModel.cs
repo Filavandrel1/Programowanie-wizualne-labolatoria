@@ -191,19 +191,144 @@ public partial class MainWindowViewModel : ViewModelBase
     /// <summary>
     /// Odwraca kolory obrazu - przycisk "Invert Colors".
     /// </summary>
+    /// <summary>
+    /// Negatyw obrazu - przycisk "Invert Colors".
+    /// Dla każdego piksela odwraca wartości kanałów: nowaWartość = 255 - staraWartość.
+    /// Format BGRA: [0]=B, [1]=G, [2]=R, [3]=A (Alpha bez zmian).
+    /// </summary>
     [RelayCommand]
     private void OdwrocKolory()
     {
-        // Funkcja zostanie zaimplementowana w następnych zapytaniach
+        if (Obraz == null) return;
+
+        var src = Obraz;
+        int w = src.PixelSize.Width;
+        int h = src.PixelSize.Height;
+        int stride = w * 4;
+        int bufferSize = stride * h;
+        byte[] pixels = new byte[bufferSize];
+
+        // Odczytaj piksele źródłowe
+        var handle = GCHandle.Alloc(pixels, GCHandleType.Pinned);
+        try
+        {
+            src.CopyPixels(new PixelRect(0, 0, w, h), handle.AddrOfPinnedObject(), bufferSize, stride);
+        }
+        finally
+        {
+            handle.Free();
+        }
+
+        // Odwróć kolory - negatyw (255 - wartość) dla R, G, B
+        for (int i = 0; i < bufferSize; i += 4)
+        {
+            pixels[i + 0] = (byte)(255 - pixels[i + 0]); // B
+            pixels[i + 1] = (byte)(255 - pixels[i + 1]); // G
+            pixels[i + 2] = (byte)(255 - pixels[i + 2]); // R
+            // pixels[i + 3] - Alpha pozostaje bez zmian
+        }
+
+        // Utwórz nową bitmapę z przetworzonymi pikselami
+        var dst = new WriteableBitmap(
+            new PixelSize(w, h),
+            src.Dpi,
+            Avalonia.Platform.PixelFormat.Bgra8888,
+            Avalonia.Platform.AlphaFormat.Premul);
+
+        using (var dstLock = dst.Lock())
+        {
+            unsafe
+            {
+                byte* dstPtr = (byte*)dstLock.Address;
+                int dstStride = dstLock.RowBytes;
+
+                for (int y = 0; y < h; y++)
+                {
+                    for (int x = 0; x < w; x++)
+                    {
+                        int arrOffset = y * stride + x * 4;
+                        int lockOffset = y * dstStride + x * 4;
+
+                        dstPtr[lockOffset + 0] = pixels[arrOffset + 0];
+                        dstPtr[lockOffset + 1] = pixels[arrOffset + 1];
+                        dstPtr[lockOffset + 2] = pixels[arrOffset + 2];
+                        dstPtr[lockOffset + 3] = pixels[arrOffset + 3];
+                    }
+                }
+            }
+        }
+
+        Obraz = dst;
     }
 
     /// <summary>
-    /// Odwraca obraz do góry nogami - przycisk "Upside Down".
+    /// Odwraca obraz do góry nogami (odbicie w poziomie) - przycisk "Upside Down".
+    /// Zamienia wiersze pikseli: pierwszy z ostatnim, drugi z przedostatnim itd.
+    /// (x, y) -> (x, h-1-y)
     /// </summary>
     [RelayCommand]
     private void DoGoryNogami()
     {
-        // Funkcja zostanie zaimplementowana w następnych zapytaniach
+        if (Obraz == null) return;
+
+        var src = Obraz;
+        int w = src.PixelSize.Width;
+        int h = src.PixelSize.Height;
+        int stride = w * 4;
+        int bufferSize = stride * h;
+        byte[] srcPixels = new byte[bufferSize];
+
+        // Odczytaj piksele źródłowe
+        var handle = GCHandle.Alloc(srcPixels, GCHandleType.Pinned);
+        try
+        {
+            src.CopyPixels(new PixelRect(0, 0, w, h), handle.AddrOfPinnedObject(), bufferSize, stride);
+        }
+        finally
+        {
+            handle.Free();
+        }
+
+        // Odwróć wiersze - wiersz y trafia na pozycję (h-1-y)
+        byte[] dstPixels = new byte[bufferSize];
+        for (int y = 0; y < h; y++)
+        {
+            int srcRowStart = y * stride;
+            int dstRowStart = (h - 1 - y) * stride;
+            Array.Copy(srcPixels, srcRowStart, dstPixels, dstRowStart, stride);
+        }
+
+        // Utwórz nową bitmapę z odwróconymi wierszami
+        var dst = new WriteableBitmap(
+            new PixelSize(w, h),
+            src.Dpi,
+            Avalonia.Platform.PixelFormat.Bgra8888,
+            Avalonia.Platform.AlphaFormat.Premul);
+
+        using (var dstLock = dst.Lock())
+        {
+            unsafe
+            {
+                byte* dstPtr = (byte*)dstLock.Address;
+                int dstStride = dstLock.RowBytes;
+
+                for (int y = 0; y < h; y++)
+                {
+                    for (int x = 0; x < w; x++)
+                    {
+                        int arrOffset = y * stride + x * 4;
+                        int lockOffset = y * dstStride + x * 4;
+
+                        dstPtr[lockOffset + 0] = dstPixels[arrOffset + 0];
+                        dstPtr[lockOffset + 1] = dstPixels[arrOffset + 1];
+                        dstPtr[lockOffset + 2] = dstPixels[arrOffset + 2];
+                        dstPtr[lockOffset + 3] = dstPixels[arrOffset + 3];
+                    }
+                }
+            }
+        }
+
+        Obraz = dst;
     }
 
     /// <summary>
