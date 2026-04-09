@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using Projekt3.Models;
 
 namespace Projekt3.Services;
@@ -117,5 +119,33 @@ public class PracownicyStore
                 Dodaj(pracownik); // Dodaj przypisuje ID automatycznie
             }
         }
+    }
+
+    /// <summary>
+    /// Eksportuje dane pracowników do pliku JSON.
+    /// Transformuje obiekty z kolekcji na listę obiektów PracownikJson (DTO),
+    /// a następnie serializuje je za pomocą System.Text.Json.JsonSerializer.
+    /// </summary>
+    public void ExportToJson(string filePath)
+    {
+        // Transformacja obiektów Pracownik → PracownikJson (klasa serializowalna)
+        var listaDoSerializacji = Pracownicy.Select(p => new PracownikJson
+        {
+            Id = p.Id,
+            Imie = p.Imie,
+            Nazwisko = p.Nazwisko,
+            Wiek = p.Wiek,
+            Stanowisko = p.Stanowisko
+        }).ToList();
+
+        // Serializacja do pliku JSON z ładnym formatowaniem
+        var opcje = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+        };
+
+        string json = JsonSerializer.Serialize(listaDoSerializacji, opcje);
+        File.WriteAllText(filePath, json, Encoding.UTF8);
     }
 }

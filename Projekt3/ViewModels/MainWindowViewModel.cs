@@ -167,4 +167,43 @@ public partial class MainWindowViewModel : ViewModelBase
             // obsługa błędów
         }
     }
+
+    /// <summary>
+    /// Serializuje dane z tabeli do pliku JSON.
+    /// Dane z kolekcji Pracownicy są transformowane na obiekty PracownikJson (DTO)
+    /// i serializowane za pomocą System.Text.Json.JsonSerializer.
+    /// </summary>
+    [RelayCommand]
+    private async Task ZapiszDoJson()
+    {
+        try
+        {
+            var window = GetMainWindow();
+            if (window == null) return;
+
+            // Wyświetlenie okna dialogowego wyboru lokalizacji zapisu
+            var file = await window.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+            {
+                Title = "Wybierz lokalizację zapisu pliku JSON",
+                FileTypeChoices = new List<FilePickerFileType>
+                {
+                    new("Pliki JSON (*.json)") { Patterns = new[] { "*.json" } },
+                    new("Wszystkie pliki (*.*)") { Patterns = new[] { "*.*" } }
+                },
+                DefaultExtension = "json",
+                SuggestedFileName = "pracownicy"
+            });
+
+            // Jeśli użytkownik wybierze lokalizację i zatwierdzi, zapisz plik JSON
+            if (file != null)
+            {
+                var filePath = file.Path.LocalPath;
+                _store.ExportToJson(filePath);
+            }
+        }
+        catch (Exception)
+        {
+            // obsługa błędów
+        }
+    }
 }
