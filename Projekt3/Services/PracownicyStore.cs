@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 using Projekt3.Models;
 
 namespace Projekt3.Services;
@@ -117,5 +119,28 @@ public class PracownicyStore
                 Dodaj(pracownik); // Dodaj przypisuje ID automatycznie
             }
         }
+    }
+
+    /// <summary>
+    /// Eksportuje dane pracowników do pliku XML.
+    /// Transformuje obiekty z kolekcji na listę obiektów PracownikXml (DTO),
+    /// a następnie serializuje je za pomocą XmlSerializer.
+    /// </summary>
+    public void ExportToXml(string filePath)
+    {
+        // Transformacja obiektów Pracownik → PracownikXml (klasa serializowalna)
+        var listaDoSerializacji = Pracownicy.Select(p => new PracownikXml
+        {
+            Id = p.Id,
+            Imie = p.Imie,
+            Nazwisko = p.Nazwisko,
+            Wiek = p.Wiek,
+            Stanowisko = p.Stanowisko
+        }).ToList();
+
+        // Serializacja do pliku XML
+        var serializer = new XmlSerializer(typeof(List<PracownikXml>));
+        using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+        serializer.Serialize(stream, listaDoSerializacji);
     }
 }

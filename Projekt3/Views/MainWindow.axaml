@@ -54,6 +54,9 @@
                     Padding="20,8" FontSize="14"/>
             <Button Content="Odczyt z .csv" Command="{Binding OdczytajZCsvCommand}"
                     Padding="20,8" FontSize="14"/>
+            <Button Content="Zapis do .xml" Command="{Binding ZapiszDoXmlCommand}"
+                    Padding="20,8" FontSize="14"
+                    Background="#FFF3E0" Foreground="Black"/>
         </StackPanel>
     </Grid>
 </Window>

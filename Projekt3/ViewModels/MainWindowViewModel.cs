@@ -167,4 +167,43 @@ public partial class MainWindowViewModel : ViewModelBase
             // obsługa błędów
         }
     }
+
+    /// <summary>
+    /// Serializuje dane z tabeli do pliku XML.
+    /// Dane z kolekcji Pracownicy są transformowane na obiekty PracownikXml (DTO)
+    /// i serializowane za pomocą XmlSerializer.
+    /// </summary>
+    [RelayCommand]
+    private async Task ZapiszDoXml()
+    {
+        try
+        {
+            var window = GetMainWindow();
+            if (window == null) return;
+
+            // Wyświetlenie okna dialogowego wyboru lokalizacji zapisu
+            var file = await window.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+            {
+                Title = "Wybierz lokalizację zapisu pliku XML",
+                FileTypeChoices = new List<FilePickerFileType>
+                {
+                    new("Pliki XML (*.xml)") { Patterns = new[] { "*.xml" } },
+                    new("Wszystkie pliki (*.*)") { Patterns = new[] { "*.*" } }
+                },
+                DefaultExtension = "xml",
+                SuggestedFileName = "pracownicy"
+            });
+
+            // Jeśli użytkownik wybierze lokalizację i zatwierdzi, zapisz plik XML
+            if (file != null)
+            {
+                var filePath = file.Path.LocalPath;
+                _store.ExportToXml(filePath);
+            }
+        }
+        catch (Exception)
+        {
+            // obsługa błędów
+        }
+    }
 }
