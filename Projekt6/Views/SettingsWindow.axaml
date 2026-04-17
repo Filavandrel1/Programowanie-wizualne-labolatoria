@@ -3,19 +3,94 @@
         xmlns:vm="using:Projekt6.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300"
+        mc:Ignorable="d" d:DesignWidth="560" d:DesignHeight="560"
         x:Class="Projekt6.Views.SettingsWindow"
         x:DataType="vm:SettingsWindowViewModel"
-        Width="400" Height="300"
-        Title="Projekt6 - Ustawienia">
+        Width="560" Height="560"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen"
+        Title="Ustawienia">
 
     <Design.DataContext>
         <vm:SettingsWindowViewModel/>
     </Design.DataContext>
 
-    <Grid>
-        <TextBlock Text="Ustawienia" FontSize="28"
-                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <Window.Styles>
+        <Style Selector="TextBox.numeric">
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="MaxLength" Value="3"/>
+        </Style>
+        <Style Selector="TextBlock.error">
+            <Setter Property="Foreground" Value="#D13438"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,2,0,8"/>
+        </Style>
+        <Style Selector="TextBlock.label">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,0,6"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid Margin="20" RowDefinitions="*,Auto">
+
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto,*">
+
+            <StackPanel Grid.Column="1" Orientation="Vertical">
+                <TextBlock Classes="label" Text="plansza"/>
+
+                <Grid ColumnDefinitions="Auto,*" Margin="0,0,0,4">
+                    <TextBlock Grid.Column="0" Text="X" FontSize="16" FontWeight="Bold"
+                               VerticalAlignment="Center" Margin="0,0,15,0"/>
+                    <TextBox Grid.Column="1" Classes="numeric"
+                             Text="{Binding BoardXText}"/>
+                </Grid>
+                <TextBlock Classes="error" Text="{Binding BoardXError}"
+                           IsVisible="{Binding BoardXError, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+
+                <Grid ColumnDefinitions="Auto,*" Margin="0,0,0,4">
+                    <TextBlock Grid.Column="0" Text="Y" FontSize="16" FontWeight="Bold"
+                               VerticalAlignment="Center" Margin="0,0,15,0"/>
+                    <TextBox Grid.Column="1" Classes="numeric"
+                             Text="{Binding BoardYText}"/>
+                </Grid>
+                <TextBlock Classes="error" Text="{Binding BoardYError}"
+                           IsVisible="{Binding BoardYError, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="3" Orientation="Vertical">
+                <TextBlock Classes="label" Text="Dydelfy"/>
+                <TextBox Classes="numeric" Text="{Binding DydelfyText}"/>
+                <TextBlock Classes="error" Text="{Binding DydelfyError}"
+                           IsVisible="{Binding DydelfyError, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+
+                <TextBlock Classes="label" Text="Krokodyle"/>
+                <TextBox Classes="numeric" Text="{Binding KrokodyleText}"/>
+                <TextBlock Classes="error" Text="{Binding KrokodyleError}"
+                           IsVisible="{Binding KrokodyleError, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+
+                <TextBlock Classes="label" Text="Szopy"/>
+                <TextBox Classes="numeric" Text="{Binding SzopyText}"/>
+                <TextBlock Classes="error" Text="{Binding SzopyError}"
+                           IsVisible="{Binding SzopyError, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Grid.Row="1" Orientation="Vertical" Margin="0,10,0,10">
+            <Grid ColumnDefinitions="*,*">
+                <TextBlock Grid.Column="0" Classes="label" Text="Czas"
+                           VerticalAlignment="Center" Margin="0"/>
+                <TextBox Grid.Column="1" Classes="numeric"
+                         Text="{Binding TimeSecondsText}"/>
+            </Grid>
+            <TextBlock Classes="error" Text="{Binding TimeSecondsError}"
+                       IsVisible="{Binding TimeSecondsError, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+        </StackPanel>
+
     </Grid>
 
 </Window>

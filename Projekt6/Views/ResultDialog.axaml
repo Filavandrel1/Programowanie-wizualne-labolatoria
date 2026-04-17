@@ -1,0 +1,27 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="360" d:DesignHeight="180"
+        x:Class="Projekt6.Views.ResultDialog"
+        Width="360" Height="180"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Wynik gry">
+
+    <Grid Margin="20" RowDefinitions="*,Auto">
+        <TextBlock Name="MessageText" Grid.Row="0"
+                   FontSize="16"
+                   TextWrapping="Wrap"
+                   TextAlignment="Center"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
+
+        <Button Grid.Row="1"
+                Content="OK"
+                Width="120" Height="36"
+                HorizontalAlignment="Center"
+                Click="OnOkClicked"/>
+    </Grid>
+
+</Window>

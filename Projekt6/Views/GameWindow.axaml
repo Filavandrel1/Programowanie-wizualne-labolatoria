@@ -3,19 +3,61 @@
         xmlns:vm="using:Projekt6.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="700"
         x:Class="Projekt6.Views.GameWindow"
         x:DataType="vm:GameWindowViewModel"
-        Width="600" Height="450"
-        Title="Projekt6 - Pole gry">
+        Width="600" Height="700"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen"
+        Title="Gdzie jest Dydelf - plansza">
 
-    <Design.DataContext>
-        <vm:GameWindowViewModel/>
-    </Design.DataContext>
+    <Grid Margin="20" RowDefinitions="*,Auto,Auto"
+          IsEnabled="{Binding IsBoardEnabled}">
 
-    <Grid>
-        <TextBlock Text="Pole gry" FontSize="28"
-                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <ItemsControl Grid.Row="0"
+                      ItemsSource="{Binding Cells}"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="{Binding Columns}" Rows="{Binding Rows}"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="vm:CellViewModel">
+                    <Button Command="{Binding ClickCommand}"
+                            IsEnabled="{Binding IsEnabled}"
+                            Width="60" Height="60"
+                            Margin="2"
+                            FontSize="18" FontWeight="Bold"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Content="{Binding DisplayText}">
+                        <Button.Styles>
+                            <Style Selector="Button">
+                                <Setter Property="Background" Value="#B0B0B0"/>
+                            </Style>
+                            <Style Selector="Button:disabled">
+                                <Setter Property="Opacity" Value="1"/>
+                            </Style>
+                        </Button.Styles>
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <TextBlock Grid.Row="1" Text="Czas" FontSize="14"
+                   HorizontalAlignment="Center" Margin="0,20,0,4"/>
+
+        <Border Grid.Row="2"
+                BorderBrush="Gray" BorderThickness="1"
+                CornerRadius="4"
+                Width="160" Height="44"
+                HorizontalAlignment="Center">
+            <TextBlock Text="{Binding TimeText}" FontSize="18"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
     </Grid>
 
 </Window>
