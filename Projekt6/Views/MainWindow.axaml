@@ -1,0 +1,27 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Projekt6.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300"
+        x:Class="Projekt6.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Width="400" Height="300"
+        Title="Projekt6 - Menu główne">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="15">
+        <TextBlock Text="Menu główne" FontSize="24" HorizontalAlignment="Center"/>
+        <Button Content="Rozpocznij grę" Width="200" HorizontalContentAlignment="Center"
+                Command="{Binding OpenGameCommand}"/>
+        <Button Content="Ustawienia" Width="200" HorizontalContentAlignment="Center"
+                Command="{Binding OpenSettingsCommand}"/>
+        <Button Content="Wyjście" Width="200" HorizontalContentAlignment="Center"
+                Command="{Binding ExitCommand}"/>
+    </StackPanel>
+
+</Window>
