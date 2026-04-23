@@ -1,0 +1,76 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Projekt7.ViewModels"
+        xmlns:m="using:Projekt7.Models"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="600"
+        x:Class="Projekt7.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Width="600" Height="600"
+        WindowStartupLocation="CenterScreen"
+        Title="Projekt7 - Analiza sekwencji DNA (k=4)">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid Margin="20" RowDefinitions="Auto,Auto,Auto,Auto,Auto,*">
+
+        <TextBlock Grid.Row="0"
+                   Text="Analiza sekwencji DNA - zliczanie 4-merow"
+                   FontSize="18" FontWeight="Bold"
+                   Margin="0,0,0,10"/>
+
+        <TextBlock Grid.Row="1"
+                   Text="Wprowadz sekwencje DNA (A, C, G, T):"
+                   Margin="0,0,0,4"/>
+
+        <TextBox Grid.Row="2"
+                 Text="{Binding DnaInput}"
+                 AcceptsReturn="True"
+                 TextWrapping="Wrap"
+                 Height="100"
+                 Watermark="np. ACGTACGTAACCGGTT"/>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal"
+                    Margin="0,10,0,10" Spacing="10">
+            <Button Content="Analizuj" Padding="20,8"
+                    Command="{Binding AnalyzeCommand}"/>
+            <Button Content="Wyczysc" Padding="20,8"
+                    Command="{Binding ClearCommand}"/>
+        </StackPanel>
+
+        <TextBlock Grid.Row="4"
+                   Foreground="#D13438"
+                   Text="{Binding ErrorMessage}"
+                   IsVisible="{Binding ErrorMessage, Converter={x:Static ObjectConverters.IsNotNull}}"
+                   Margin="0,0,0,8"/>
+
+        <Grid Grid.Row="5" RowDefinitions="Auto,*">
+            <TextBlock Grid.Row="0" Margin="0,0,0,6">
+                <Run Text="Liczba okien (4-merow): "/>
+                <Run Text="{Binding TotalWindows}" FontWeight="Bold"/>
+            </TextBlock>
+
+            <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="1" CornerRadius="3">
+                <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding Results}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="m:NucleotideCount">
+                                <Grid ColumnDefinitions="*,Auto" Margin="10,4">
+                                    <TextBlock Grid.Column="0" Text="{Binding Sequence}"
+                                               FontFamily="Menlo,Consolas,monospace" FontSize="16"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Count}"
+                                               FontWeight="Bold" FontSize="16"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+    </Grid>
+
+</Window>
