@@ -31,5 +31,14 @@ build_property.EnableCodeStyleSeverity =
 [/Users/filavandrel/uczelnia/C\#/Programowanie-wizualne-labolatoria/Projekt9/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[/Users/filavandrel/uczelnia/C\#/Programowanie-wizualne-labolatoria/Projekt9/Views/FormView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/filavandrel/uczelnia/C\#/Programowanie-wizualne-labolatoria/Projekt9/Views/HomeView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [/Users/filavandrel/uczelnia/C\#/Programowanie-wizualne-labolatoria/Projekt9/Views/MainWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/filavandrel/uczelnia/C\#/Programowanie-wizualne-labolatoria/Projekt9/Views/SavedFormsView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

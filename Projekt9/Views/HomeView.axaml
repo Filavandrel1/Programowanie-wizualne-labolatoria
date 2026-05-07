@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Projekt9.ViewModels"
+             x:Class="Projekt9.Views.HomeView"
+             x:DataType="vm:HomeViewModel">
+    <Grid RowDefinitions="Auto,*" Margin="32" RowSpacing="24">
+        <StackPanel Grid.Row="0" Spacing="6" HorizontalAlignment="Center">
+            <TextBlock Text="📋 Formularze"
+                       FontSize="32" FontWeight="Bold"
+                       HorizontalAlignment="Center"/>
+            <TextBlock Text="Wybierz, co chcesz zrobić"
+                       FontSize="15" Opacity="0.7"
+                       HorizontalAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="24"
+                    HorizontalAlignment="Center" VerticalAlignment="Center">
+
+            <Button Command="{Binding NewFormCommand}"
+                    Width="240" Height="160"
+                    Background="#1FAE6B" Foreground="White"
+                    CornerRadius="12" FontSize="16" FontWeight="SemiBold">
+                <StackPanel Spacing="10" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="📝" FontSize="48" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Wypełnij nowy formularz"
+                               TextAlignment="Center" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Button>
+
+            <Button Command="{Binding ViewSavedFormsCommand}"
+                    Width="240" Height="160"
+                    Background="#3666C8" Foreground="White"
+                    CornerRadius="12" FontSize="16" FontWeight="SemiBold">
+                <StackPanel Spacing="10" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="📂" FontSize="48" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Podgląd zapisanych formularzy"
+                               TextAlignment="Center" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>
