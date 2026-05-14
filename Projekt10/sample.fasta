@@ -1,0 +1,7 @@
+>seq1 Homo sapiens fragment
+ATGCCGTAGCTAGCTAGCTA
+GCTAGCTGACTGATCGATCG
+>seq2 Mus musculus fragment
+ATGCGCGATCGATCGATCGC
+>seq3 example sequence with N
+ATGCNNNATGCATGCATGCATGCATGCATGC
