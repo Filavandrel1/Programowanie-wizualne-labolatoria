@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Projekt11.ViewModels"
+             x:Class="Projekt11.Views.LabelPreviewView"
+             x:DataType="vm:LabelPreviewViewModel">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- Pasek tytułu -->
+        <Border Grid.Row="0" Background="#1F6E84" Padding="16,12">
+            <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="8">
+                <TextBlock Grid.Column="0" Text="{Binding Title}"
+                           FontSize="18" FontWeight="Bold" Foreground="White"
+                           VerticalAlignment="Center"/>
+                <Button Grid.Column="1" Content="💾 Eksport PNG" Command="{Binding ExportPngCommand}" Padding="12,8"/>
+                <Button Grid.Column="2" Content="🖨️ Drukuj"      Command="{Binding PrintCommand}"     Padding="12,8"/>
+                <Button Grid.Column="3" Content="← Powrót"      Command="{Binding BackCommand}"      Padding="12,8"/>
+            </Grid>
+        </Border>
+
+        <!-- Etykieta -->
+        <ScrollViewer Grid.Row="1" Padding="32" Background="#F5F5F5">
+            <Border Background="White" Padding="32" CornerRadius="8"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    BoxShadow="0 4 18 0 #33000000">
+                <Border.Styles>
+                    <Style Selector="TextBlock">
+                        <Setter Property="Foreground" Value="#101010"/>
+                    </Style>
+                </Border.Styles>
+                <StackPanel Spacing="14" MinWidth="380" HorizontalAlignment="Center">
+                    <TextBlock Text="LABORATORIUM — ETYKIETA PRÓBKI"
+                               FontWeight="Bold" FontSize="14"
+                               HorizontalAlignment="Center" Opacity="0.7"/>
+                    <Image Source="{Binding QrImage}"
+                           Width="320" Height="320"
+                           HorizontalAlignment="Center"/>
+                    <StackPanel Spacing="2" HorizontalAlignment="Center">
+                        <TextBlock Text="{Binding Sample.SampleId}"
+                                   FontWeight="Bold" FontSize="22" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding Sample.Name}"
+                                   FontSize="16" HorizontalAlignment="Center"/>
+                        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" Opacity="0.75">
+                            <TextBlock Text="{Binding Sample.Type}"/>
+                            <TextBlock Text="•"/>
+                            <TextBlock Text="{Binding Sample.CollectionDate, StringFormat={}{0:yyyy-MM-dd}}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </ScrollViewer>
+
+        <!-- Status -->
+        <Border Grid.Row="2" Padding="16,10" Background="#11000000">
+            <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap"/>
+        </Border>
+    </Grid>
+</UserControl>

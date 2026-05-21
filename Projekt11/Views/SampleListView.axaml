@@ -1,0 +1,72 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Projekt11.ViewModels"
+             xmlns:m="using:Projekt11.Models"
+             x:Class="Projekt11.Views.SampleListView"
+             x:DataType="vm:SampleListViewModel">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
+        <!-- Pasek tytułu -->
+        <Border Grid.Row="0" Background="#1F6E84" Padding="16,12">
+            <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto" ColumnSpacing="8">
+                <TextBlock Grid.Column="0" Text="🧬 Próbki biologiczne"
+                           FontSize="20" FontWeight="Bold" Foreground="White"
+                           VerticalAlignment="Center"/>
+                <Button Grid.Column="1" Content="➕ Nowa"      Command="{Binding NewCommand}"     Padding="12,8"/>
+                <Button Grid.Column="2" Content="✏️ Edytuj"    Command="{Binding EditCommand}"    Padding="12,8"/>
+                <Button Grid.Column="3" Content="🏷️ Etykieta"  Command="{Binding LabelCommand}"   Padding="12,8"/>
+                <Button Grid.Column="4" Content="🗑️ Usuń"      Command="{Binding DeleteCommand}"  Padding="12,8"/>
+            </Grid>
+        </Border>
+
+        <!-- Pasek filtrów -->
+        <Border Grid.Row="1" Padding="16,10" Background="#11000000">
+            <Grid ColumnDefinitions="Auto,200,Auto,*,Auto" ColumnSpacing="10" VerticalAlignment="Center">
+                <TextBlock Grid.Column="0" Text="Typ:" VerticalAlignment="Center"/>
+                <ComboBox Grid.Column="1"
+                          ItemsSource="{Binding TypeFilters}"
+                          SelectedItem="{Binding SelectedType}"/>
+                <TextBlock Grid.Column="2" Text="Szukaj:" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                <TextBox  Grid.Column="3" Text="{Binding Search}" PlaceholderText="ID / nazwa / opis…"/>
+                <Button   Grid.Column="4" Content="✖" Command="{Binding ClearSearchCommand}" Padding="10,6"/>
+            </Grid>
+        </Border>
+
+        <!-- Lista -->
+        <Border Grid.Row="2" Padding="0">
+            <Grid>
+                <!-- Pusto -->
+                <StackPanel IsVisible="{Binding IsEmpty}" Spacing="8"
+                            HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.7">
+                    <TextBlock Text="📭" FontSize="48" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Brak próbek pasujących do filtra." HorizontalAlignment="Center"/>
+                </StackPanel>
+
+                <DataGrid IsVisible="{Binding HasItems}"
+                          ItemsSource="{Binding Items}"
+                          SelectedItem="{Binding Selected}"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          GridLinesVisibility="Horizontal"
+                          HeadersVisibility="Column">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID"        Binding="{Binding SampleId}"            Width="140"/>
+                        <DataGridTextColumn Header="Nazwa"     Binding="{Binding Name}"                Width="*"/>
+                        <DataGridTextColumn Header="Typ"       Binding="{Binding Type}"                Width="100"/>
+                        <DataGridTextColumn Header="Data"      Binding="{Binding CollectionDate, StringFormat={}{0:yyyy-MM-dd}}" Width="120"/>
+                        <DataGridTextColumn Header="Opis"      Binding="{Binding Description}"         Width="2*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+        <!-- Stopka -->
+        <Border Grid.Row="3" Padding="16,8" Background="#11000000">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="Łącznie:"/>
+                <TextBlock Text="{Binding Items.Count}"/>
+                <TextBlock Text="próbek"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Projekt11.ViewModels"
+             x:Class="Projekt11.Views.SampleEditView"
+             x:DataType="vm:SampleEditViewModel">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- Pasek tytułu -->
+        <Border Grid.Row="0" Background="#1F6E84" Padding="16,12">
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                <TextBlock Grid.Column="0" Text="{Binding ScreenTitle}"
+                           FontSize="20" FontWeight="Bold" Foreground="White"
+                           VerticalAlignment="Center"/>
+                <Button Grid.Column="1" Content="💾 Zapisz"  Command="{Binding SaveCommand}"   Padding="12,8"/>
+                <Button Grid.Column="2" Content="← Anuluj"  Command="{Binding CancelCommand}" Padding="12,8"/>
+            </Grid>
+        </Border>
+
+        <!-- Formularz -->
+        <ScrollViewer Grid.Row="1" Padding="32,20">
+            <StackPanel Spacing="12" MaxWidth="640" HorizontalAlignment="Center">
+
+                <StackPanel Spacing="4">
+                    <TextBlock Text="ID próbki (unikalne) *" FontWeight="SemiBold"/>
+                    <TextBox Text="{Binding SampleId}" PlaceholderText="np. DNA-001"/>
+                </StackPanel>
+
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Nazwa próbki *" FontWeight="SemiBold"/>
+                    <TextBox Text="{Binding Name}"/>
+                </StackPanel>
+
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Typ" FontWeight="SemiBold"/>
+                    <ComboBox ItemsSource="{Binding Types}"
+                              SelectedItem="{Binding SelectedType}"
+                              HorizontalAlignment="Stretch"/>
+                </StackPanel>
+
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Data pobrania" FontWeight="SemiBold"/>
+                    <DatePicker SelectedDate="{Binding CollectionDate}"/>
+                </StackPanel>
+
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Opis / uwagi" FontWeight="SemiBold"/>
+                    <TextBox Text="{Binding Description}"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             Height="160"/>
+                </StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Status -->
+        <Border Grid.Row="2" Padding="16,10" Background="#11000000">
+            <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap"/>
+        </Border>
+    </Grid>
+</UserControl>
